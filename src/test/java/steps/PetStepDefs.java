@@ -1,7 +1,6 @@
 package steps;
 
 
-import io.cucumber.java.BeforeAll;
 import io.cucumber.java.BeforeStep;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -23,7 +22,6 @@ public class PetStepDefs {
     @BeforeStep
     public static void init() {
         RestAssured.baseURI = "https://petstore.swagger.io/v2";
-        System.out.println("Test test");
     }
 
     @Given("pet id {string} and name as {string}")
@@ -88,6 +86,8 @@ public class PetStepDefs {
 
     @Given("pet {string} status")
     public void petStatus(String status) {
+        request = given();
+        request.contentType("application/json");
         request.basePath("/pet/findByStatus").queryParam("status", status);
     }
 
@@ -100,6 +100,71 @@ public class PetStepDefs {
     public void allPetsShouldBeReturnedByStatus() {
         int i = response.statusCode();
         Assert.assertEquals(200, i);
-        System.out.println(response.getBody());
+    }
+
+    @Given("pet pet {int}  number")
+    public void pet_pet_number(int id) {
+        request = given();
+        request.contentType("application/json");
+        request.basePath("/pet/" + id);
+    }
+
+    @When("user invokes the api to read pet")
+    public void userInvokesTheApiToReadPet() {
+        response = request.get();
+    }
+
+    @Then("pet id {int} details need to be retrieved")
+    public void pet_id_details_need_to_be_retrieved(int id) {
+        System.out.println("Pet ID" + id);
+        if (id == 1) {
+            Assert.assertEquals(200, response.statusCode());
+            JsonPath body = response.jsonPath();
+            Object responseId = body.get("id");
+            Assert.assertEquals(id, responseId);
+        } else {
+            Assert.assertEquals(404, response.statusCode());
+            JsonPath body = response.jsonPath();
+            Object message = body.get("message");
+            Assert.assertEquals("Pet not found", message);
+        }
+    }
+
+    @Given("pet {int} number")
+    public void petIdNumber(int id) {
+        request = given();
+        request.contentType("application/json");
+        request.basePath("/pet/" + id);
+    }
+
+    @When("user invokes the api to delete pet")
+    public void userInvokesTheApiToDeletePet() {
+        response = request.delete();
+    }
+
+    @Then("pet with {int} deleted")
+    public void petWithIdDeleted(int id) {
+        int statusCode = response.statusCode();
+        Assert.assertEquals(200, statusCode);
+    }
+
+    @Given("pet {int} {string} and {string}")
+    public void petIdNameNameAndStatusStatus(int id, String name, String status) {
+        request = given();
+        request.contentType("application/json");
+        request.basePath("/pet/" + id);
+        request.body("name=" + name + "&status=" + status);
+    }
+
+    @When("uses invokes the api to update pet")
+    public void usesInvokesTheApiToUpdatePet() {
+
+        response = request.post();
+    }
+
+    @Then("pet with {int} updated")
+    public void petWithIdUpdated(int id) {
+        int statusCode = response.statusCode();
+        Assert.assertEquals(415, statusCode);
     }
 }
