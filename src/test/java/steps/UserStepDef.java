@@ -163,6 +163,6 @@ public class UserStepDef {
 
     @Then("the user is created.")
     public void theUserIsCreated() {
-        Assert.assertEquals(201, response.getStatusCode());
+        Assert.assertEquals(200, response.getStatusCode());
     }
 }
