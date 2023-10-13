@@ -116,7 +116,6 @@ public class PetStepDefs {
 
     @Then("pet id {int} details need to be retrieved")
     public void pet_id_details_need_to_be_retrieved(int id) {
-        System.out.println("Pet ID" + id);
         if (id == 1) {
             Assert.assertEquals(200, response.statusCode());
             JsonPath body = response.jsonPath();
