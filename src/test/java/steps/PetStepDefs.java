@@ -25,7 +25,7 @@ public class PetStepDefs {
     }
 
     @Given("pet id {string} and name as {string}")
-    public void pet_details(String petId, String name) {
+    public void setPetIdAndName(String petId, String name) {
         request = given();
         request.contentType("application/json");
         request = request.body("{\n" +
@@ -49,12 +49,12 @@ public class PetStepDefs {
     }
 
     @When("user invokes the API to create a pet")
-    public void user_invokes_the_api_to_create_a_pet() {
+    public void invokePostApiToCreatePet() {
         response = request.post("/pet");
     }
 
     @Then("Pet object is created")
-    public void pet_object_is_created() {
+    public void petIsCreated() {
         int i = response.statusCode();
         Assert.assertEquals(200, i);
         Headers headers = response.getHeaders();
@@ -70,7 +70,7 @@ public class PetStepDefs {
     }
 
     @When("user invokes the API to update a pet")
-    public void userInvokesTheAPIToUpdateAPet() {
+    public void userInvokesAPIToUpdateAPet() {
         response = request.put("/pet");
     }
 
@@ -103,7 +103,7 @@ public class PetStepDefs {
     }
 
     @Given("pet pet {int}  number")
-    public void pet_pet_number(int id) {
+    public void setPetId(int id) {
         request = given();
         request.contentType("application/json");
         request.basePath("/pet/" + id);
@@ -115,7 +115,7 @@ public class PetStepDefs {
     }
 
     @Then("pet id {int} details need to be retrieved")
-    public void pet_id_details_need_to_be_retrieved(int id) {
+    public void getPetById(int id) {
         if (id == 1) {
             Assert.assertEquals(200, response.statusCode());
             JsonPath body = response.jsonPath();
@@ -130,7 +130,7 @@ public class PetStepDefs {
     }
 
     @Given("pet {int} number")
-    public void petIdNumber(int id) {
+    public void setPetIdNumber(int id) {
         request = given();
         request.contentType("application/json");
         request.basePath("/pet/" + id);

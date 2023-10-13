@@ -97,4 +97,72 @@ public class UserStepDef {
     public void userUsernameIsDeleted(String username) {
         Assert.assertEquals(404, response.statusCode());
     }
+
+    @Given("user id {string} and {string}")
+    public void userIdUseridAndPassword(String username, String password) {
+        request = given();
+        request.contentType("application/json");
+        request.basePath("/user/login")
+                .queryParam("username", "test")
+                .queryParam("password", "abc123");
+    }
+
+    @When("user invokes the get api to login")
+    public void userInvokesTheGetApiToLogin() {
+        response = request.get();
+    }
+
+    @Then("user is successfully logged in")
+    public void userIsSuccessfullyLoggedIn() {
+        Assert.assertEquals(200, response.getStatusCode());
+        Object message = response.jsonPath().get("message");
+        Assert.assertTrue(message.toString().contains("logged in user"));
+    }
+
+    @When("user invokes the get api to logout")
+    public void userInvokesTheGetApiToLogout() {
+        request.basePath("/user/logout");
+        response = request.get();
+    }
+
+    @Then("user is successfully logged out")
+    public void userIsSuccessfullyLoggedOut() {
+        Assert.assertEquals(200, response.getStatusCode());
+    }
+
+    @Given("user details {int} {string} {string} {string} {string} {string} {string} {int} to create user")
+    public void userDetailsIdUserNameFirstNameLastNameEmailPasswordPhoneUserStatusToCreateUser(
+            int id,
+            String userName,
+            String firstName,
+            String lastName,
+            String email,
+            String password,
+            String phone,
+            int status) {
+
+        request = given();
+        request.contentType("application/json");
+        JsonObject user = new JsonObject();
+        user.add("id", id);
+        user.add("username", userName);
+        user.add("firstName", firstName);
+        user.add("lastName", lastName);
+        user.add("email", email);
+        user.add("password", password);
+        user.add("phone", phone);
+        user.add("userStatus", status);
+
+        request.body(user.toString());
+    }
+
+    @When("user invokes the post API to create user")
+    public void userInvokesThePostAPIToCreateUser() {
+        response = request.post("/user");
+    }
+
+    @Then("the user is created.")
+    public void theUserIsCreated() {
+        Assert.assertEquals(200, response.getStatusCode());
+    }
 }

@@ -39,3 +39,27 @@ Feature: User API Testing
     Examples:
       | username  |
       | "user100" |
+
+  Scenario Outline: User login
+    Given user id <userid> and <password>
+    When user invokes the get api to login
+    Then user is successfully logged in
+    Examples:
+      | userid | password |
+      | "test" | "abc123" |
+
+  Scenario Outline: User logout
+    Given user id <userid> and <password>
+    When user invokes the get api to logout
+    Then user is successfully logged out
+    Examples:
+      | userid | password |
+      | "test" | "abc123" |
+
+  Scenario Outline: Create User
+    Given user details <id> <userName> <firstName> <lastName> <email> <password> <phone> <userStatus> to create user
+    When user invokes the post API to create user
+    Then the user is created.
+    Examples:
+      | id  | userName  | firstName | lastName | email                 | password   | phone        | userStatus |
+      | 101 | "user100" | "test1"   | "rest"   | "test1.rest@demo.com" | "Test1234" | "1234567890" | 1          |
